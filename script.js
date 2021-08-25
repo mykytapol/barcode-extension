@@ -1,8 +1,3 @@
-// async function generate_barcode() {
-//     console.log(document.URL)
-// }
-// generate_barcode();
-
 function get_asin(url_arr) {
   if (!url_arr.includes("www.amazon.com")) return null;
   let id = url_arr.indexOf("dp");
@@ -13,16 +8,26 @@ function get_asin(url_arr) {
   return asin;
 }
 
-chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
-  let url = tabs[0].url;
+function create_element(asin) {
+  let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("jsbarcode-value", asin);
+  svg.className.baseVal = "barcode";
+  svg.setAttribute(
+    "style",
+    "position: absolute;right:10px;top:10px;z-index: 9999;"
+  );
+  document.body.appendChild(svg);
+  JsBarcode(".barcode").init();
+}
+
+function display() {
+  let url = window.location.href;
   let array = url.split("/");
   let asin = get_asin(array);
   if (asin === null) {
-    if (document.getElementById("error_text"))
-      document.getElementById("error_text").innerHTML = "Oops...<br>Wrong Url";
-    var elem = document.getElementById("barcode");
-    elem.remove();
     return;
   }
-  JsBarcode("#barcode", asin);
-});
+  create_element(asin);
+}
+
+display();

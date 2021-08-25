@@ -2,11 +2,14 @@
   "name": "Amazon Analyzer",
   "version": "1.0.0",
   "description": "Generate a barcode for Amazon product.",
-  "manifest_version": 3,
+  "manifest_version": 2,
   "author": "Joe Difalco",
-  "action": {
-    "default_popup": "index.html",
-    "default_title": "Amazon Analyzer"
-  },
-  "permissions": ["tabs"]
+  "permissions": ["tabs", "storage"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["JsBarcode.all.min.js", "script.js"],
+      "run_at": "document_end"
+    }
+  ]
 }
